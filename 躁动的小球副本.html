@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title></title>
+        <style media="screen">
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            html, body {
+                height: 100%;
+                overflow: hidden;
+            }
+            canvas {
+                box-shadow: 0 0 50px black;
+                /* margin: 50px; */
+            }
+        </style>
+    </head>
+    <body>
+
+        <canvas id="canvas" width="500" height="500">
+            。。。。
+        </canvas>
+
+    </body>
+    <script src="common.js" charset="utf-8"></script>
+    <script type="text/javascript">
+
+        // 获取元素
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext('2d');
+
+        // 修改canvas为屏幕大小
+        canvas.width = document.body.offsetWidth;
+        canvas.height = document.body.clientHeight;
+
+        var canvasWidth = canvas.width;
+        var canvasHeight = canvas.height;
+
+        // 构造函数
+        function Ball(x, y, r, color, speedX, speedY) {
+            this.r = r || random(10, 30);
+            this.x = x || random(this.r, canvasWidth - this.r);
+            this.y = y || random(this.r, canvasHeight - this.r);
+            this.color = color || randomColor(true);
+            this.speedX = speedX || random(-5, 5, 0);
+            this.speedY = speedY || random(-5, 5, 0);
+
+            // 绘制
+            this.draw = function () {
+                ctx.beginPath();
+                ctx.fillStyle = this.color;
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2, true);
+                ctx.fill();
+            };
+
+            // 运动
+            this.move = function () {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // 临界值
+                if (this.x < this.r || this.x > canvasWidth - this.r) {
+                    this.speedX *= -1;
+                }
+                if (this.y < this.r || this.y > canvasHeight - this.r) {
+                    this.speedY *= -1;
+                }
+
+                this.draw();
+            };
+        }
+
+
+
+
+        // 声明保存小球的数组
+        var balls = [];
+        for (var i = 0; i < 500; i++) {
+            var ball = new Ball();
+            ball.draw();
+            balls.push(ball);
+        }
+
+
+
+        function gameloop() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+            for (var i = 0; i < balls.length; i++) {
+                balls[i].move();
+            }
+
+            setTimeout(gameloop, 1);
+        }
+        gameloop();
+
+
+
+
+
+
+
+
+    </script>
+</html>
